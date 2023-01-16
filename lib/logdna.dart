@@ -16,8 +16,17 @@ class LogDNA {
 
   LogDNA({required this.apiKey, required this.hostName});
 
-  //// Sends the log via the logdna ingest API
+  /// Sends the log via the logdna ingest API
+  Future<DnaResponse> logLines(List<DnaLine> lines, {List<String>? tags}) async {
+    return _log(lines, tags);
+  }
+
+  /// Sends the log via the logdna ingest API
   Future<DnaResponse> log(DnaLine line, {List<String>? tags}) async {
+    return _log([line], tags);
+  }
+
+  Future<DnaResponse> _log(List<DnaLine> lines, [List<String>? tags]) async {
     final now = DateTime.now().toUtc().millisecondsSinceEpoch / 100;
     try {
       String uriString = "https://logs.mezmo.com/logs/ingest?hostname=$hostName"
@@ -29,7 +38,7 @@ class LogDNA {
 
       http.Response response = await http.post(uri,
           body: jsonEncode({
-            "lines": [line]
+            "lines": lines,
           }),
           headers: {
             "Content-Type": "application/json",
