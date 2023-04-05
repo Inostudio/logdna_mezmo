@@ -46,11 +46,9 @@ class LogDNA {
           });
 
       if (response.statusCode == 200) {
-        print(true);
         var result = DnaResponse(true, response.body);
         return result;
       } else {
-        print(true);
         return DnaResponse(false, response.body);
       }
     } catch (e) {
